@@ -1,0 +1,62 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: rgb(246, 240, 212);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
+header {
+    text-align: center;
+}
+
+.title {
+    margin: 5px;
+    font-size: 3em;
+}
+
+.container {
+    display: flex;
+    margin: 0 10px;
+    height: 90vh;
+}
+
+.panel {
+    border: 1px solid black;
+    background: whitesmoke;
+    margin: 5px;
+}
+
+.panel h1 {
+    text-align: center;
+}
+
+.listElements {
+    padding: 5px;
+    width: 30vw;
+    margin: 5px;
+}
+
+.canvas {
+    width: calc(70vw - 60px);
+    height: auto;
+    border: 1px solid grey;
+    padding: 5px;
+    margin:5px;
+}
+
+.element {
+    width: 150px;
+    height: 25px;
+    margin: 5px;
+    border-radius: 20px;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+
+
