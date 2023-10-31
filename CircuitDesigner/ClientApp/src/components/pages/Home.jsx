@@ -4,7 +4,7 @@ import Canvas from "../elements/Canvas";
 function Home(){
     return (
         <>
-           <header><h1 className="title">Circuit Designer</h1></header>
+           {/* <header><h1 className="title">Circuit Designer</h1></header> */}
             <div className="container">
                 <Panel title="Фигуры"/>
                 <Canvas/>
