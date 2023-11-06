@@ -6,14 +6,14 @@ import Canvas from "../elements/Canvas";
 import { useState } from "react";
 
 const initData = [
-    <Resistor width='46' height='32' />,
-    <Capacitor width='46' height='32' />,
-    <InductionCoil width='46' height='32' />
+    <Resistor x='10' y='10' width='46' height='32' />,
+    <Capacitor x='10' y='10' width='46' height='32' />,
+    <InductionCoil x='10' y='10' width='46' height='32'/>
 ]
 
 function Home(){
 
-    const [elements, setElements] = useState(initData);
+    const [elements, setElements] = useState([]);
 
     const handleClick = (element) => {
         console.log(elements)
@@ -27,7 +27,7 @@ function Home(){
            
             <div className="container">
                 <Panel title="Фигуры" listElements={initData} handleForButton={handleClick}/>
-                <Canvas listElements={elements}/>
+                <Canvas listElements={elements}/>              
             </div>
         </>
     )

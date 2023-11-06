@@ -1,26 +1,22 @@
-import Resistor from "./Resistor";
-
 function Canvas(props) {
+    const list = props.listElements.map(item => <g>{item}</g>);
+
+
+    
 
     return (
         <div className="canvas">
-            <svg width="100%" height="95%" color="white">
-                <rect fill="white" width="100%" height="100%">
-                    <g>
-                    {props.listElements}
-                    <div>
-                    <Resistor width='100%' height='100%'></Resistor>
-                    </div>
-                    </g>                    
-                </rect>
+            <svg id='svg' width="100%" height="95%">
+                <rect fill="white" width="100%" height="100%"/>
+                {list}                          
             </svg>
-            <form action="">  
-                    <label>1 стр.</label>                 
+            <form action="">
+                    <label>1 стр.</label>
                     <input type="radio" name="page"/>
                     <label>2 стр.</label>  
                     <input type="radio" name="page"/>
                     <label>3 стр.</label>  
-                    <input type="radio" name="page"/>               
+                    <input type="radio" name="page"/>
             </form>
         </div>
     )
