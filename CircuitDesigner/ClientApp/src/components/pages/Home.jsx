@@ -5,6 +5,7 @@ import Panel from "../elements/Panel";
 import Canvas from "../elements/Canvas";
 import { useState } from "react";
 
+
 const initData = [
     <Resistor x='10' y='10' width='46' height='32' />,
     <Capacitor x='10' y='10' width='46' height='32' />,
@@ -23,11 +24,10 @@ function Home(){
     }
 
     return (
-        <>
-           
+        <>  
             <div className="container">
                 <Panel title="Фигуры" listElements={initData} handleForButton={handleClick}/>
-                <Canvas listElements={elements}/>              
+                <Canvas listElements={elements}/>
             </div>
         </>
     )

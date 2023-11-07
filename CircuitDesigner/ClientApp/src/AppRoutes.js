@@ -1,7 +1,6 @@
 import Home from "./components/pages/Home";
 
 
-
 const AppRoutes = [
   {
     index: true,

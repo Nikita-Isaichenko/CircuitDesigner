@@ -1,10 +1,8 @@
 function ButtonElement(props) {
-    return (      
+    return (
         <>
             <button className="element" onClick={() => props.onClick(props.element)}>
-                
-                {props.element} 
-                     
+                {props.element}
             </button>
         </>
     )
