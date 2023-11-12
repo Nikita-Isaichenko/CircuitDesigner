@@ -4,11 +4,12 @@ import InductionCoil from "../elements/InductionCoil";
 import Panel from "../elements/Panel";
 import Canvas from "../elements/Canvas";
 import { useState } from "react";
+import PageList from "../elements/PageList";
 
 
 const initData = [<Resistor x="10" y="10" width="100" height="50" />,
- <Capacitor x="10" y="10" width="100" height="50" />,
- <InductionCoil x="10" y="10" width="100" height="50" />
+<Capacitor x="10" y="10" width="100" height="50" />,
+<InductionCoil x="10" y="10" width="100" height="50" />
 ]
 
 function Home() {
@@ -27,7 +28,11 @@ function Home() {
         <>
             <div className="container">
                 <Panel title="Фигуры" listElements={initData} handleForButton={handleClick} />
-                <Canvas listElements={elements} />
+                <div className="canvas-container">
+                    <Canvas listElements={elements} />
+                    <PageList />
+                </div>
+
             </div>
         </>
     )
