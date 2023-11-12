@@ -1,8 +1,8 @@
-function ButtonElement(props) {
+function ButtonElement({element, onClick}) {
     return (
         <>
-            <button className="element" onClick={() => props.onClick(props.element)}>
-                {props.element}
+            <button className="elementButton" onClick={() => onClick(element)}>
+                {element}
             </button>
         </>
     )

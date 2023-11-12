@@ -60,7 +60,7 @@ header {
    
 }
 
-.element {
+.elementButton {
     width: 100%;
     height: 75px;
     margin-top: 5px;
@@ -69,6 +69,10 @@ header {
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
+}
+
+.element{
+    cursor: pointer;
 }
 
 
