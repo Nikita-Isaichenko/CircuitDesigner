@@ -7,17 +7,17 @@ import { useState } from "react";
 import PageList from "../elements/PageList";
 
 
-const initData = [<Resistor x="10" y="10" width="100" height="50" />,
-<Capacitor x="10" y="10" width="100" height="50" />,
-<InductionCoil x="10" y="10" width="100" height="50" />
+const initData = [<Resistor x="1000" y="1000" width="100" height="50" />,
+<Capacitor x="1000" y="1000" width="100" height="50" />,
+<InductionCoil x="1000" y="1000" width="100" height="50" />
 ]
 
 function Home() {
 
-    const [elements, setElements] = useState([]);
+    const [elements, setElements] = useState(initData);
 
-    const handleClick = (element) => {
-        const newElements = [...elements]
+    function clickHandler(element) {
+        const newElements = [...elements];
 
         newElements.push(element);
 
@@ -27,9 +27,9 @@ function Home() {
     return (
         <>
             <div className="container">
-                <Panel title="Фигуры" listElements={initData} handleForButton={handleClick} />
+                <Panel title="Фигуры" listElements={initData} handleForButton={clickHandler} />
                 <div className="canvas-container">
-                    <Canvas listElements={elements} />
+                    <Canvas listElements={elements}/>
                     <PageList />
                 </div>
 

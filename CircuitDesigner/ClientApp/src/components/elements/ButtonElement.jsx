@@ -1,7 +1,15 @@
-function ButtonElement({element, onClick}) {
+function ButtonElement({ element, onClick }) {
+
+    function dragStartHandler(event) {
+        event.dataTransfer.setData('text/html', event.target.innerHTML);
+    }
+
     return (
         <>
-            <button className="elementButton" onClick={() => onClick(element)}>
+            <button className="elementButton"
+                onClick={() => onClick(element)}
+                draggable={true}
+                onDragStart={dragStartHandler}>
                 {element}
             </button>
         </>
