@@ -1,24 +1,38 @@
+/**
+ * Создает компонент, отвечающий за отрисовку элементов и взаимодействия с ними.
+ * @param props.listElements Список элементов для отрисовки на полотне.
+ * @returns Полотное с отрисованными элементами.
+ */
 function Canvas({ listElements }) {
 
-    let pressed = false;
+    let isPressed = false;
     let currentElement = null;
 
+    /**
+     * Обрабатывает событие onmousedown для элемента
+     */
     function mouseDownHandler(event) {
         const element = event.target.parentNode;
 
         if (element.className.baseVal === 'element') {
-            pressed = true;
+            isPressed = true;
             currentElement = element;
         }
     }
 
+    /**
+     * Обрабатывает событие onmouseup.
+     */
     function mouseUpHandler() {
-        pressed = false;
+        isPressed = false;
         currentElement = null;
     }
 
+    /**
+     * Обрабатывает событие onmousemove, устанавливает новые координаты для элемента.
+     */
     function mouseMoveHandler(event) {
-        if (pressed && currentElement.className.baseVal === 'element') {
+        if (isPressed && currentElement.className.baseVal === 'element') {
             const { clientX, clientY } = event;
 
             let w = parseInt(currentElement.getAttribute('width'));
@@ -29,16 +43,23 @@ function Canvas({ listElements }) {
         }
     }
 
+    /**
+     * Обрабатывает события ondragover.
+     */
     function dragOverHandler(event) {
         event.preventDefault();
     }
 
-
+    /**
+     * Обрабатывает события ondrop.
+     */
     function dropHandler(event) {
         event.preventDefault();
 
         const { clientX, clientY } = event;
         const parser = new DOMParser();
+
+        // Парсится строку, в которой содержится svg, для получения DOM объекта.
         const parsedHtml = parser.parseFromString(event.dataTransfer.getData('text/html'), 'text/html');
         const element = parsedHtml.body.firstChild;
 
@@ -64,10 +85,12 @@ function Canvas({ listElements }) {
                     onDragOver={dragOverHandler}
                     onDrop={dropHandler}
                 >
-                    <rect fill="white" width="100%" height="100%" />
-                    {listElements.map(element =>
-                        element
-                    )}
+                    <g>
+                        <rect fill="white" width="100%" height="100%" />
+                        {listElements.map(element =>
+                            element
+                        )}
+                    </g>
                 </svg>
             </div>
         </>

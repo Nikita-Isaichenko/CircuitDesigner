@@ -12,10 +12,18 @@ const initData = [<Resistor x="1000" y="1000" width="100" height="50" />,
 <InductionCoil x="1000" y="1000" width="100" height="50" />
 ]
 
+/**
+ * Создает компонент главной страницы.
+ * @returns Возвращает главную страницу.
+ */
 function Home() {
 
     const [elements, setElements] = useState(initData);
 
+    /**
+     * Обрабатывает клик по элементу и добавляет его на полотно.
+     * @param element Элемент для добавления на полотно.
+     */
     function clickHandler(element) {
         const newElements = [...elements];
 

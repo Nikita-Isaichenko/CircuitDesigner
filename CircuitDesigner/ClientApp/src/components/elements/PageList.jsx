@@ -1,3 +1,7 @@
+/**
+ * Создает компонент для списка страниц.
+ * @returns Компонент со списком страниц.
+ */
 function PageList() {
     return (
         <div className="form-container">
