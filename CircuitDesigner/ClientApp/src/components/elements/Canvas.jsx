@@ -70,6 +70,9 @@ function Canvas({ listElements }) {
         element.setAttribute('y', clientY - h / 2 - document.getElementById('svg').getBoundingClientRect().top);
 
         event.target.parentNode.append(element);
+
+        // Удаляет элемент, который используется для dragImage.
+        document.body.removeChild(document.getElementById('dragimage'));
     }
 
     return (
@@ -85,8 +88,13 @@ function Canvas({ listElements }) {
                     onDragOver={dragOverHandler}
                     onDrop={dropHandler}
                 >
+                    <defs>         
+                        <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="lightgray" stroke-width="1" />
+                        </pattern>
+                    </defs>
                     <g>
-                        <rect fill="white" width="100%" height="100%" />
+                        <rect fill="url(#grid)" width="100%" height="100%" />
                         {listElements.map(element =>
                             element
                         )}
