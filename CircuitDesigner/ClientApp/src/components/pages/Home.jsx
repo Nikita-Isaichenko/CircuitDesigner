@@ -28,8 +28,10 @@ function Home() {
         const newElements = [...elements];
 
         newElements.push(element);
-
+        
         setElements(newElements);
+
+        console.log(elements[elements.length - 1].props.x);
     }
 
     return (
@@ -40,8 +42,10 @@ function Home() {
                     <Canvas listElements={elements}/>
                     <PageList />
                 </div>
-
+                
             </div>
+            <div id="dragImage"/>
+            
         </>
     )
 }

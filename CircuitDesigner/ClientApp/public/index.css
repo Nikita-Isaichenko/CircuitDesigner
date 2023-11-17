@@ -10,6 +10,7 @@
 html, body{
     background: whitesmoke;
     height: 100vh;
+    overflow: hidden;
 }
 
 #root {
@@ -91,6 +92,23 @@ header {
 .element{
     cursor: pointer;
 }
+
+.element-moving {
+    border: dashed #0ccafa;
+}
+
+.element-moving > *:not(rect) {
+    stroke: gray;
+}
+
+
+#dragImage {
+    display: flex;
+    position: absolute;
+    z-index: -1;
+}
+
+
 
 
 

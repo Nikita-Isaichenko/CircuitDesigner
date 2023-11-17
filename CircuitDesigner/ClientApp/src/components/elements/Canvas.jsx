@@ -9,14 +9,31 @@ function Canvas({ listElements }) {
     let currentElement = null;
 
     /**
+     * Помещает центр переданного элемента под курсор.
+     * @param event Событие мыши.
+     * @param element Элемент, центр которого необходимо поместить под курсор.
+     */
+    function getCenterElementUnderCursor(event, element) {
+        const { clientX, clientY } = event;
+
+        let w = parseInt(element.getAttribute('width'));
+        let h = parseInt(element.getAttribute('height'));
+
+        element.setAttribute('x', clientX - w / 2 - document.getElementById('svg').getBoundingClientRect().left);
+        element.setAttribute('y', clientY - h / 2 - document.getElementById('svg').getBoundingClientRect().top);
+    }
+
+    /**
      * Обрабатывает событие onmousedown для элемента
      */
     function mouseDownHandler(event) {
         const element = event.target.parentNode;
 
-        if (element.className.baseVal === 'element') {
+        if (element.classList.contains('element')) {
             isPressed = true;
             currentElement = element;
+            currentElement.classList.add('element-moving')
+            
         }
     }
 
@@ -25,21 +42,17 @@ function Canvas({ listElements }) {
      */
     function mouseUpHandler() {
         isPressed = false;
+        //currentElement.classList.remove('element-moving');
         currentElement = null;
+
     }
 
     /**
      * Обрабатывает событие onmousemove, устанавливает новые координаты для элемента.
      */
     function mouseMoveHandler(event) {
-        if (isPressed && currentElement.className.baseVal === 'element') {
-            const { clientX, clientY } = event;
-
-            let w = parseInt(currentElement.getAttribute('width'));
-            let h = parseInt(currentElement.getAttribute('height'));
-
-            currentElement.setAttribute('x', clientX - w / 2 - document.getElementById('svg').getBoundingClientRect().left);
-            currentElement.setAttribute('y', clientY - h / 2 - document.getElementById('svg').getBoundingClientRect().top);
+        if (isPressed && currentElement.classList.contains('element')) {
+            getCenterElementUnderCursor(event, currentElement);
         }
     }
 
@@ -56,23 +69,15 @@ function Canvas({ listElements }) {
     function dropHandler(event) {
         event.preventDefault();
 
-        const { clientX, clientY } = event;
         const parser = new DOMParser();
 
         // Парсится строку, в которой содержится svg, для получения DOM объекта.
         const parsedHtml = parser.parseFromString(event.dataTransfer.getData('text/html'), 'text/html');
         const element = parsedHtml.body.firstChild;
 
-        let w = parseInt(element.getAttribute('width'));
-        let h = parseInt(element.getAttribute('height'));
-
-        element.setAttribute('x', clientX - w / 2 - document.getElementById('svg').getBoundingClientRect().left);
-        element.setAttribute('y', clientY - h / 2 - document.getElementById('svg').getBoundingClientRect().top);
+        getCenterElementUnderCursor(event, element);
 
         event.target.parentNode.append(element);
-
-        // Удаляет элемент, который используется для dragImage.
-        document.body.removeChild(document.getElementById('dragimage'));
     }
 
     return (
@@ -88,7 +93,7 @@ function Canvas({ listElements }) {
                     onDragOver={dragOverHandler}
                     onDrop={dropHandler}
                 >
-                    <defs>         
+                    <defs>
                         <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
                             <path d="M 50 0 L 0 0 0 50" fill="none" stroke="lightgray" stroke-width="1" />
                         </pattern>
