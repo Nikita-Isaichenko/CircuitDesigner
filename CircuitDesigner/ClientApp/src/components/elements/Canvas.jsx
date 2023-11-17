@@ -42,7 +42,7 @@ function Canvas({ listElements }) {
      */
     function mouseUpHandler() {
         isPressed = false;
-        //currentElement.classList.remove('element-moving');
+        currentElement.classList.remove('element-moving');
         currentElement = null;
 
     }
