@@ -10,7 +10,7 @@
 html, body{
     background: whitesmoke;
     height: 100vh;
-    overflow: hidden;
+
 }
 
 #root {
@@ -19,6 +19,7 @@ html, body{
 
 header {
     text-align: center;
+    
 }
 
 .title {
@@ -68,6 +69,7 @@ header {
     top: -1000px;
 }
 
+
 .canvas-container {
     width: 80vw;
     display: flex;
@@ -93,19 +95,24 @@ header {
     cursor: pointer;
 }
 
-.element-moving {
-    border: dashed #0ccafa;
+.element-moving > rect {
+    stroke-dasharray: 4 2;
+    pointer-events:"none";
+    stroke: #00a8ff;
+    
 }
 
 .element-moving > *:not(rect) {
     stroke: gray;
 }
 
-
-#dragImage {
-    display: flex;
+.element-draging {
     position: absolute;
-    z-index: -1;
+    z-index: 1000;
+}
+
+.radio-page {
+    margin-right: 10px;
 }
 
 

@@ -1,6 +1,3 @@
-import ButtonElement from "./ButtonElement";
-
-
 /**
  * Создает компонент, который содержит в себе все элементы.
  * @param props.title Заголовок
@@ -8,13 +5,23 @@ import ButtonElement from "./ButtonElement";
  * @param props.handleForButton Функция обработчик клика для кнопки.
  * @returns Компонент, содержащий все элементы.
  */
-function Panel({title, listElements, handleForButton}) {
+function Panel({ title, listElements, handleForButton, mouseDownHandler, mouseMoveHandler, mouseUpHandler }) {
     return (
-        <div className="panel">
+        <div
+            className="panel"
+            onMouseMove={mouseMoveHandler}
+            onMouseUp={mouseUpHandler}>
             <h1>{title}</h1>
             <div className="listElements">
-                {listElements.map((element, index) => 
-                    <ButtonElement key={index} element={element} onClick={handleForButton}></ButtonElement>
+                {listElements.map((element, index) =>
+                    <button
+                        key={index}
+                        className="elementButton"
+                        onClick={() => handleForButton(element)}
+                        onMouseDown={mouseDownHandler}
+                    >
+                        {element}
+                    </button>
                 )}
             </div>
         </div>
