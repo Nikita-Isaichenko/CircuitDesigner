@@ -102,7 +102,6 @@ function Home() {
         }
 
         if (isDrag) {
-            console.log('test')
             if (event.currentTarget.tagName === 'svg') {
                 currentElement.classList.remove('element-draging');
                 event.currentTarget.append(currentElement);
