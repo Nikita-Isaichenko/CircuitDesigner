@@ -2,10 +2,10 @@
  * Создает компонент, отвечающий за отрисовку элементов и взаимодействия с ними.
  * @returns Полотное с отрисованными элементами.
  */
-function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandler }) {
+function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandler, wheelHandler }) {
     return (
         <>
-            <div className="canvas">
+            <div className="canvas" id="canvas">
                 <svg id='svg'
                     xmlns="http://www.w3.org/2000/svg"
                     width="2000px"
@@ -13,8 +13,7 @@ function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandl
                     onMouseDown={mouseDownHandler}
                     onMouseMove={mouseMoveHandler}
                     onMouseUp={mouseUpHandler}
-                    // onDragOver={dragOverHandler}
-                    // onDrop={dropHandler}
+                    onWheel={wheelHandler}
                 >
                     <defs>
                         <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">

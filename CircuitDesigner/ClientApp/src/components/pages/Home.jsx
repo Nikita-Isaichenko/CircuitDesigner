@@ -18,9 +18,14 @@ const initData = [<Resistor x="1200" y="1200" width="100" height="50" />,
  */
 function Home() {
 
+    let scale = 1; 
+    let offsetX = 0;
+    let offsetY = 0;
+    let sizeCell = 10*scale;
     let isDrag = false;
     let isPressed = false;
     let currentElement = null;
+
     const [elements, setElements] = useState([]);
 
     /**
@@ -40,7 +45,7 @@ function Home() {
      * @param event Эвент события.
      */
     function setDragImagePosition(event) {
-        const {clientX, clientY} = event;
+        const { clientX, clientY } = event;
 
         currentElement.style.left = clientX + 'px';
         currentElement.style.top = clientY + 'px';
@@ -54,12 +59,12 @@ function Home() {
     function setCenterElementUnderCursor(event, element) {
 
         const { clientX, clientY } = event;
-
+        console.log(scale)
         let w = parseInt(element.getAttribute('width'));
         let h = parseInt(element.getAttribute('height'));
 
-        const x = Math.floor((clientX - w / 2 - document.getElementById('svg').getBoundingClientRect().left) / 10) * 10;
-        const y = Math.floor((clientY - h / 2 - document.getElementById('svg').getBoundingClientRect().top) / 10) * 10;
+        const x = Math.floor((clientX / scale - w / 2 - document.getElementById('svg').getBoundingClientRect().left / scale) / sizeCell) * sizeCell;
+        const y = Math.floor((clientY / scale - h / 2 - document.getElementById('svg').getBoundingClientRect().top / scale) / sizeCell) * sizeCell;
 
         element.setAttribute('x', Math.max(x, 0));
         element.setAttribute('y', Math.max(y, 0));
@@ -73,7 +78,7 @@ function Home() {
 
         if (element.classList.contains('element') && event.currentTarget.tagName === 'BUTTON' && !isDrag) {
             isDrag = true;
-            currentElement = element.cloneNode(true); 
+            currentElement = element.cloneNode(true);
 
             document.querySelector('.panel').append(currentElement);
 
@@ -132,6 +137,30 @@ function Home() {
         }
     }
 
+    function wheelHandler(event) {
+        const delta = event.deltaY;
+        const svgCanvas = document.getElementById('svg');
+
+        scale += delta > 0 ? -0.1 : 0.1;
+
+        // Ограничение масштаба
+        scale = Math.max(0.1, Math.min(scale, 3));
+
+        const mouseX = event.clientX - svgCanvas.getBoundingClientRect().left;
+        const mouseY = event.clientY - svgCanvas.getBoundingClientRect().top;
+
+        // Рассчитываем смещение для центрирования масштаба относительно точки курсора
+        const newOffsetX = (mouseX - offsetX) * (1 - scale / 2);
+        const newOffsetY = (mouseY - offsetY) * (1 - scale / 2);
+
+        // Применение масштаба и смещения к SVG
+        svgCanvas.style.transform = `scale(${scale})`;
+
+        // Обновляем значения смещения
+        offsetX = mouseX;
+        offsetY = mouseY;
+    }
+
     return (
         <>
             <div className="container">
@@ -142,13 +171,15 @@ function Home() {
                     mouseDownHandler={mouseDownHandler}
                     mouseMoveHandler={mouseMoveHandler}
                     mouseUpHandler={mouseUpHandler}
-                     />
+                />
                 <div className="canvas-container">
                     <Canvas
                         listElements={elements}
                         mouseDownHandler={mouseDownHandler}
                         mouseMoveHandler={mouseMoveHandler}
-                        mouseUpHandler={mouseUpHandler}/>
+                        mouseUpHandler={mouseUpHandler}
+                        wheelHandler={wheelHandler}
+                    />
                     <PageList />
                 </div>
 
