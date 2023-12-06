@@ -7,26 +7,28 @@ import { useState } from "react";
 import PageList from "../elements/PageList";
 
 
-const initData = [<Resistor x="1200" y="1200" width="100" height="50" />,
-<Capacitor x="1200" y="1200" width="50" height="50" />,
-<InductionCoil x="1000" y="1000" width="100" height="50" />
+const initData = [<Resistor x="140" y="140" width="100" height="50" />,
+<Capacitor x="100" y="100" width="50" height="50" />,
+<InductionCoil x="120" y="120" width="100" height="50" />
 ]
 
+let scale = 1;
 /**
  * Создает компонент главной страницы.
  * @returns Возвращает главную страницу.
  */
 function Home() {
+    // Размер одной клетки.
+    let sizeCell = 10;
 
-    let scale = 1; 
-    let offsetX = 0;
-    let offsetY = 0;
-    let sizeCell = 10*scale;
+    const [elements, setElements] = useState([]);
+    //const [scale, setScale] = useState(1);
+
     let isDrag = false;
     let isPressed = false;
     let currentElement = null;
+    let scalableCell = sizeCell * scale;
 
-    const [elements, setElements] = useState([]);
 
     /**
      * Обрабатывает клик по элементу и добавляет его на полотно.
@@ -59,12 +61,15 @@ function Home() {
     function setCenterElementUnderCursor(event, element) {
 
         const { clientX, clientY } = event;
-        console.log(scale)
+
+        console.log(clientX)
+        console.log(scale);
+
         let w = parseInt(element.getAttribute('width'));
         let h = parseInt(element.getAttribute('height'));
 
-        const x = Math.floor((clientX / scale - w / 2 - document.getElementById('svg').getBoundingClientRect().left / scale) / sizeCell) * sizeCell;
-        const y = Math.floor((clientY / scale - h / 2 - document.getElementById('svg').getBoundingClientRect().top / scale) / sizeCell) * sizeCell;
+        const x = Math.floor((clientX - (w / scale) / 2 - document.getElementById('svg').getBoundingClientRect().left) / scalableCell * scale) * scalableCell;
+        const y = Math.floor((clientY - (h / scale) / 2 - document.getElementById('svg').getBoundingClientRect().top) / scalableCell * scale) * scalableCell;
 
         element.setAttribute('x', Math.max(x, 0));
         element.setAttribute('y', Math.max(y, 0));
@@ -138,27 +143,16 @@ function Home() {
     }
 
     function wheelHandler(event) {
+        event.preventDefault();
+
         const delta = event.deltaY;
-        const svgCanvas = document.getElementById('svg');
 
         scale += delta > 0 ? -0.1 : 0.1;
 
-        // Ограничение масштаба
-        scale = Math.max(0.1, Math.min(scale, 3));
+        scale = Math.max(0.1, Math.min(scale, 4));
 
-        const mouseX = event.clientX - svgCanvas.getBoundingClientRect().left;
-        const mouseY = event.clientY - svgCanvas.getBoundingClientRect().top;
-
-        // Рассчитываем смещение для центрирования масштаба относительно точки курсора
-        const newOffsetX = (mouseX - offsetX) * (1 - scale / 2);
-        const newOffsetY = (mouseY - offsetY) * (1 - scale / 2);
-
-        // Применение масштаба и смещения к SVG
-        svgCanvas.style.transform = `scale(${scale})`;
-
-        // Обновляем значения смещения
-        offsetX = mouseX;
-        offsetY = mouseY;
+        document.getElementById('svg').setAttribute('viewBox', `0 0 ${document.getElementById('svg').clientWidth * scale} ${document.getElementById('svg').clientHeight * scale}`);
+        console.log(scale);
     }
 
     return (
@@ -179,10 +173,10 @@ function Home() {
                         mouseMoveHandler={mouseMoveHandler}
                         mouseUpHandler={mouseUpHandler}
                         wheelHandler={wheelHandler}
+                        scale={scale}
                     />
                     <PageList />
                 </div>
-
             </div>
         </>
     )
