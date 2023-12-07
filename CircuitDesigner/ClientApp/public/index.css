@@ -63,12 +63,20 @@ header {
 
 .canvas-container {
     width: 80vw;
+
     display: flex;
     flex-direction: column;
 }
 
 .form-container {
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 80vw;
+    z-index: 1000px;
     padding: 5px;
+
 }
 
 .elementButton {

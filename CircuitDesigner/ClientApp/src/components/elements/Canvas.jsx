@@ -2,13 +2,20 @@
  * Создает компонент, отвечающий за отрисовку элементов и взаимодействия с ними.
  * @returns Полотное с отрисованными элементами.
  */
-function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandler, wheelHandler, scale }) {
-
+function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandler, wheelHandler, settings }) {
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('svg').addEventListener('wheel', wheelHandler, {passive: false});
+        document.getElementById('svg').addEventListener('wheel', wheelHandler, { passive: false });
+
         const svg = document.getElementById('svg');
-        svg.setAttribute('viewBox', `0 0 ${svg.clientWidth} ${svg.clientHeight}`);
+
+        svg.setAttribute('viewBox',
+            `${settings.viewBox.x -= Math.floor(svg.clientWidth / 2 / 10) * 10}
+             ${settings.viewBox.y -= Math.floor(svg.clientHeight / 2 / 10) * 10}
+             ${svg.clientWidth}
+             ${svg.clientHeight}`);
     });
+
+    console.log('обновлено 1')
 
     return (
         <>
@@ -23,15 +30,17 @@ function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandl
                     preserveAspectRatio="none"
                 >
                     <defs>
-                        <pattern id="grid" width={Math.floor(10 * scale)} height={Math.floor(10 * scale)} patternUnits="userSpaceOnUse">
-                            <path d={`M ${Math.floor(10 * scale)} 0 L 0 0 0 ${Math.floor(10 * scale)}`} fill="none" stroke="lightgray" stroke-width="1" />
+                        <pattern id="grid" width={settings.sizeCell} height={settings.sizeCell} patternUnits="userSpaceOnUse">
+                            <path d={`M ${settings.sizeCell} 0 L 0 0 0 ${settings.sizeCell}`}
+                                fill="none"
+                                stroke="lightgray"
+                                stroke-width="1" />
                         </pattern>
                     </defs>
-                    <rect fill="url(#grid)" width="100%" height="100%" />
+                    <rect fill="url(#grid)" width={settings.width} height={settings.height} />
                     {listElements.map(element =>
                         element
                     )}
-
                 </svg>
             </div>
         </>

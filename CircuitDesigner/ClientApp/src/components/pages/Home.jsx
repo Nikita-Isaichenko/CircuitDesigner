@@ -7,28 +7,39 @@ import { useState } from "react";
 import PageList from "../elements/PageList";
 
 
-const initData = [<Resistor x="140" y="140" width="100" height="50" />,
-<Capacitor x="100" y="100" width="50" height="50" />,
-<InductionCoil x="120" y="120" width="100" height="50" />
+const initData = [<Resistor x="1000" y="1000" width="100" height="50" />,
+<Capacitor x="1200" y="1200" width="50" height="50" />,
+<InductionCoil x="1100" y="1100" width="100" height="50" />
 ]
 
-let scale = 1;
+const settings = {
+    scale: 1,
+    sizeCell: 10,
+    width: 2000,
+    height: 2000,
+    viewBox: {
+        x: 1000,
+        y: 1000,
+    },
+    getScalableCell: function () {
+        return Math.floor(this.scale * this.sizeCell);
+    }
+}
+
 /**
  * Создает компонент главной страницы.
  * @returns Возвращает главную страницу.
  */
 function Home() {
     // Размер одной клетки.
-    let sizeCell = 10;
-
+    //let sizeCell = 10;
+    console.log('scalable cell ' + settings.getScalableCell());
+    console.log('обновление')
     const [elements, setElements] = useState([]);
-    //const [scale, setScale] = useState(1);
 
     let isDrag = false;
     let isPressed = false;
     let currentElement = null;
-    let scalableCell = sizeCell * scale;
-
 
     /**
      * Обрабатывает клик по элементу и добавляет его на полотно.
@@ -59,20 +70,23 @@ function Home() {
      * @param element Элемент, центр которого необходимо поместить под курсор.
      */
     function setCenterElementUnderCursor(event, element) {
-
         const { clientX, clientY } = event;
 
-        console.log(clientX)
-        console.log(scale);
+        
 
         let w = parseInt(element.getAttribute('width'));
         let h = parseInt(element.getAttribute('height'));
+        console.log(w)
+        const x = Math.floor((clientX - (w) / 2 - document.getElementById('svg').getBoundingClientRect().left) * settings.scale / settings.sizeCell) * settings.sizeCell;
+        const y = Math.floor((clientY - (h) / 2 - document.getElementById('svg').getBoundingClientRect().top) * settings.scale / settings.sizeCell) * settings.sizeCell;
 
-        const x = Math.floor((clientX - (w / scale) / 2 - document.getElementById('svg').getBoundingClientRect().left) / scalableCell * scale) * scalableCell;
-        const y = Math.floor((clientY - (h / scale) / 2 - document.getElementById('svg').getBoundingClientRect().top) / scalableCell * scale) * scalableCell;
+        console.log(x)  
+        element.setAttribute('x', Math.max(x + Math.floor(settings.viewBox.x / 10) * 10, 0));
+        element.setAttribute('y', Math.max(y + Math.floor(settings.viewBox.y / 10) * 10, 0));
 
-        element.setAttribute('x', Math.max(x, 0));
-        element.setAttribute('y', Math.max(y, 0));
+        console.log('viewbox X: ' + settings.viewBox.x);
+        console.log('element' + element.getAttribute('x'))
+        console.log('scale' + settings.scale)
     }
 
     /**
@@ -101,12 +115,31 @@ function Home() {
             currentElement = element;
             currentElement.classList.add('element-moving');
         }
+        else {
+            isPressed = true;
+        }
     }
 
     /**
      * Обрабатывает событие onmousemove, устанавливает новые координаты для элемента.
      */
     function mouseMoveHandler(event) {
+
+        if (isPressed && currentElement === null) {
+            settings.viewBox.x -= Math.floor(event.movementX * settings.scale);
+            settings.viewBox.y -= Math.floor(event.movementY * settings.scale);
+
+            const svg = document.getElementById('svg');
+            
+            svg.setAttribute('viewBox',
+                `${Math.floor(settings.viewBox.x)}
+                 ${Math.floor(settings.viewBox.y) }
+                 ${svg.clientWidth * settings.scale}
+                 ${svg.clientHeight * settings.scale}`);
+
+            return
+        }
+
         if (isPressed) {
             setCenterElementUnderCursor(event, currentElement);
         }
@@ -130,6 +163,7 @@ function Home() {
      */
     function mouseUpHandler() {
         isPressed = false;
+
         if (isDrag) {
             currentElement.remove();
             isDrag = false;
@@ -147,12 +181,16 @@ function Home() {
 
         const delta = event.deltaY;
 
-        scale += delta > 0 ? -0.1 : 0.1;
+        settings.scale += delta > 0 ? -0.2 : 0.2;
+        settings.scale = Math.max(0.2, Math.min(settings.scale, 4));
 
-        scale = Math.max(0.1, Math.min(scale, 4));
-
-        document.getElementById('svg').setAttribute('viewBox', `0 0 ${document.getElementById('svg').clientWidth * scale} ${document.getElementById('svg').clientHeight * scale}`);
-        console.log(scale);
+        document
+            .getElementById('svg')
+            .setAttribute('viewBox',
+                `${settings.viewBox.x}
+                 ${settings.viewBox.y}
+                 ${document.getElementById('svg').clientWidth * settings.scale}
+                 ${document.getElementById('svg').clientHeight * settings.scale}`);
     }
 
     return (
@@ -173,7 +211,7 @@ function Home() {
                         mouseMoveHandler={mouseMoveHandler}
                         mouseUpHandler={mouseUpHandler}
                         wheelHandler={wheelHandler}
-                        scale={scale}
+                        settings={settings}
                     />
                     <PageList />
                 </div>
