@@ -77,8 +77,8 @@ function Home() {
         let w = parseInt(element.getAttribute('width'));
         let h = parseInt(element.getAttribute('height'));
         console.log(w)
-        const x = Math.floor((clientX - (w) / 2 - document.getElementById('svg').getBoundingClientRect().left) * settings.scale / settings.sizeCell) * settings.sizeCell;
-        const y = Math.floor((clientY - (h) / 2 - document.getElementById('svg').getBoundingClientRect().top) * settings.scale / settings.sizeCell) * settings.sizeCell;
+        const x = Math.floor((clientX - (w / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().left) * settings.scale / settings.sizeCell) * settings.sizeCell;
+        const y = Math.floor((clientY - (h / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().top) * settings.scale / settings.sizeCell) * settings.sizeCell;
 
         console.log(x)  
         element.setAttribute('x', Math.max(x + Math.floor(settings.viewBox.x / 10) * 10, 0));
