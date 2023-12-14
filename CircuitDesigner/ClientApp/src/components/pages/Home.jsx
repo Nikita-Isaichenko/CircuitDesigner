@@ -12,17 +12,18 @@ const initData = [<Resistor x="1000" y="1000" width="100" height="50" />,
 <InductionCoil x="1100" y="1100" width="100" height="50" />
 ]
 
+// Настройки для полотна.
 const settings = {
     scale: 1,
+    minScale: 0.2,
+    maxScale: 3,
+    scaleFactor: 0.2,
     sizeCell: 10,
     width: 2000,
     height: 2000,
     viewBox: {
         x: 1000,
         y: 1000,
-    },
-    getScalableCell: function () {
-        return Math.floor(this.scale * this.sizeCell);
     }
 }
 
@@ -31,10 +32,6 @@ const settings = {
  * @returns Возвращает главную страницу.
  */
 function Home() {
-    // Размер одной клетки.
-    //let sizeCell = 10;
-    console.log('scalable cell ' + settings.getScalableCell());
-    console.log('обновление')
     const [elements, setElements] = useState([]);
 
     let isDrag = false;
@@ -72,21 +69,19 @@ function Home() {
     function setCenterElementUnderCursor(event, element) {
         const { clientX, clientY } = event;
 
-        
-
         let w = parseInt(element.getAttribute('width'));
         let h = parseInt(element.getAttribute('height'));
-        console.log(w)
-        const x = Math.floor((clientX - (w / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().left) * settings.scale / settings.sizeCell) * settings.sizeCell;
-        const y = Math.floor((clientY - (h / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().top) * settings.scale / settings.sizeCell) * settings.sizeCell;
 
-        console.log(x)  
+        const MidElementX
+            = clientX - (w / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().left;
+        const MidElementY
+            = clientY - (h / 2) / settings.scale - document.getElementById('svg').getBoundingClientRect().top;
+
+        const x = Math.floor(MidElementX * settings.scale / settings.sizeCell) * settings.sizeCell;
+        const y = Math.floor(MidElementY * settings.scale / settings.sizeCell) * settings.sizeCell;
+
         element.setAttribute('x', Math.max(x + Math.floor(settings.viewBox.x / 10) * 10, 0));
         element.setAttribute('y', Math.max(y + Math.floor(settings.viewBox.y / 10) * 10, 0));
-
-        console.log('viewbox X: ' + settings.viewBox.x);
-        console.log('element' + element.getAttribute('x'))
-        console.log('scale' + settings.scale)
     }
 
     /**
@@ -104,7 +99,7 @@ function Home() {
             currentElement.classList.add('element-moving');
             currentElement.classList.add('element-draging');
 
-            // Костыль, чтобы при обычном клике не было видно drag image.
+            // Для того, чтобы при обычном клике не было видно drag image.
             currentElement.style.left = -1000 + 'px';
 
             return;
@@ -130,10 +125,10 @@ function Home() {
             settings.viewBox.y -= Math.floor(event.movementY * settings.scale);
 
             const svg = document.getElementById('svg');
-            
+
             svg.setAttribute('viewBox',
                 `${Math.floor(settings.viewBox.x)}
-                 ${Math.floor(settings.viewBox.y) }
+                 ${Math.floor(settings.viewBox.y)}
                  ${svg.clientWidth * settings.scale}
                  ${svg.clientHeight * settings.scale}`);
 
@@ -176,21 +171,24 @@ function Home() {
         }
     }
 
+    /**
+     * Обрабатывает событие onwheel.
+     */
     function wheelHandler(event) {
         event.preventDefault();
 
         const delta = event.deltaY;
 
-        settings.scale += delta > 0 ? -0.2 : 0.2;
-        settings.scale = Math.max(0.2, Math.min(settings.scale, 4));
+        settings.scale += delta > 0 ? settings.scaleFactor : -settings.scaleFactor;
+        settings.scale = Math.max(settings.minScale, Math.min(settings.scale, settings.maxScale));
 
-        document
-            .getElementById('svg')
-            .setAttribute('viewBox',
-                `${settings.viewBox.x}
-                 ${settings.viewBox.y}
-                 ${document.getElementById('svg').clientWidth * settings.scale}
-                 ${document.getElementById('svg').clientHeight * settings.scale}`);
+        const svg = document.getElementById('svg');
+
+        svg.setAttribute('viewBox',
+            `${settings.viewBox.x}
+             ${settings.viewBox.y}
+             ${svg.clientWidth * settings.scale}
+             ${svg.clientHeight * settings.scale}`);
     }
 
     return (

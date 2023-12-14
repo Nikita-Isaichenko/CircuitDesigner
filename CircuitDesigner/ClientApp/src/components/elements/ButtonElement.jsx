@@ -9,9 +9,6 @@ function ButtonElement({ element, onClick }) {
         <>
             <button className="elementButton"
                 onClick={() => onClick(element)}
-                draggable={true}
-                // onDragStart={dragStartHandler}
-                // onDragOver={dragOverHandler}
             >
                 {element}
             </button>

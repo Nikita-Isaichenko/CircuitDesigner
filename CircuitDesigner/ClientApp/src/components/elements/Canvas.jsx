@@ -3,19 +3,17 @@
  * @returns Полотное с отрисованными элементами.
  */
 function Canvas({ listElements, mouseDownHandler, mouseMoveHandler, mouseUpHandler, wheelHandler, settings }) {
-    document.addEventListener('DOMContentLoaded', () => {
+    window.onload = () => {
         document.getElementById('svg').addEventListener('wheel', wheelHandler, { passive: false });
 
         const svg = document.getElementById('svg');
 
         svg.setAttribute('viewBox',
-            `${settings.viewBox.x -= Math.floor(svg.clientWidth / 2 / 10) * 10}
-             ${settings.viewBox.y -= Math.floor(svg.clientHeight / 2 / 10) * 10}
+            `${settings.viewBox.x -= Math.floor(svg.clientWidth / 2)}
+             ${settings.viewBox.y -= Math.floor(svg.clientHeight / 2)}
              ${svg.clientWidth}
              ${svg.clientHeight}`);
-    });
-
-    console.log('обновлено 1')
+    };
 
     return (
         <>
